@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#canvas1{
+    border: 2px solid #111;
+    box-shadow: 0 4px 12px 1px #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+    font-family: 'Creepster', sans-serif;
+}
+img{
+    display: none;
+}
+body{
+    background-color: #333;
+}
