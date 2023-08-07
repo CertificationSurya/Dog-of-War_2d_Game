@@ -56,7 +56,7 @@ window.addEventListener('load', () => {
         update(deltaTime) {
 
             this.time += deltaTime;
-            if(this.time > this.maxTime) this.gameOver = true
+            if (this.time > this.maxTime) this.gameOver = true
 
             this.background.update(this)
             this.player.update(this.input.keys, deltaTime)
@@ -88,19 +88,19 @@ window.addEventListener('load', () => {
                 //to slow down animation time, deltaTime
                 collision.update(deltaTime)
             })
-            
+
             // handle Floating Messages
             this.floatingMessages.forEach((message, index) => {
                 message.update()
             })
 
             // deletion of marked elements
-            
-            this.collisions = this.collisions.filter(collision =>  !collision.markedForDeletion)
-            this.particles = this.particles.filter(particle =>  !particle.markedForDeletion)
-            this.enemies = this.enemies.filter(enemy =>  !enemy.markedForDeletion)
-            this.floatingMessages = this.floatingMessages.filter(message =>  !message.markedForDeletion)
-            
+
+            this.collisions = this.collisions.filter(collision => !collision.markedForDeletion)
+            this.particles = this.particles.filter(particle => !particle.markedForDeletion)
+            this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion)
+            this.floatingMessages = this.floatingMessages.filter(message => !message.markedForDeletion)
+
 
         }
 
@@ -123,7 +123,7 @@ window.addEventListener('load', () => {
             })
 
             this.UI.draw(context)
-            
+
             this.floatingMessages.forEach(message => {
                 message.draw(context)
             })
@@ -143,7 +143,7 @@ window.addEventListener('load', () => {
         }
     }
 
-    const game = new Game(canvas.width, canvas.height)
+    let game = new Game(canvas.width, canvas.height)
     let lastTime = 0
 
     function animate(timeStamp = 0) {
@@ -155,10 +155,20 @@ window.addEventListener('load', () => {
         game.update(deltaTime)
         game.draw(ctx)
         // requestAnimationFrame, automatically adjust screen refresh rate also auto generates the timestamp and auto passeses it to the function it calls, in this case animate
-        {!game.gameOver && requestAnimationFrame(animate)}
+        { !game.gameOver && requestAnimationFrame(animate) }
     }
     animate();
 
+    // for Reloading purpose
+    window.addEventListener('keydown', (e) => {
+        if (game.gameOver) {
+            if (e.key === 'r' || e.key === 'R') {
+                game.gameOver = !game.gameOver
+                game = new Game(canvas.width, canvas.height)
+                animate()
+            }
+        }
+    })
 
 
 })

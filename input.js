@@ -11,7 +11,8 @@ export class InputHandler {
                 e.key === "ArrowRight" ||
                 e.key === "Enter")
                 && this.keys.indexOf(e.key) === -1) {
-                this.keys.push(e.key);
+                // new key stay on first
+                this.keys.unshift(e.key);
             }
             else if (e.key === "d"){
                 this.game.debug = !this.game.debug;

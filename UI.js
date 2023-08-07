@@ -36,11 +36,15 @@ export class UI{
             context.textAlign = 'center';
             context.font = `${this.fontSize * 2}px ${this.fontFamily}`
             if (this.game.score > this.game.winningScore){
-                context.fillText(`Winner winner, Booyah?👍`, this.game.width * 0.5, this.game.height * 0.5)
+                context.fillText(`Winner winner, Booyah?👍`, this.game.width * 0.5, this.game.height * 0.5 -100)
             }
             else{
-                context.fillText(`Hahhh, Noob 😶‍🌫️`, this.game.width * 0.5, this.game.height * 0.5)
+                context.fillText(`Hahhh, Noob 😶‍🌫️`, this.game.width * 0.5, this.game.height * 0.5 -100)
             }
+            // restart Message
+            context.fillStyle = "#36454F"
+            context.fillText(`Wanna Play Again?`, this.game.width * 0.5, this.game.height * 0.5)
+            context.fillText(`👉 press "r".`, this.game.width * 0.5, this.game.height * 0.5 + 50)
         }
 
         context.restore();

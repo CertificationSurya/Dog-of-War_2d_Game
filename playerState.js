@@ -17,6 +17,12 @@ class State {
         this.state = state;
         this.game = game;
     }
+    
+    createDivingParticles(){
+        for (let i = 0; i < 20; i++) {
+            this.game.particles.unshift(new Splash(this.game, this.game.player.x + this.game.player.width * 0.5, this.game.player.y + this.game.player.height * 0.5,))
+        }
+    }
 }
 
 
@@ -36,6 +42,9 @@ export class Sitting extends State {
     // takes key input and checks if current key is pressed for switching to other state
     handleInput(input) {
         if (input.includes('ArrowLeft') || input.includes('ArrowRight')) {
+            // fixed choppy state change
+            if (input.length > 1) input.length = 1;
+
             this.game.player.setState(states.RUNNING, 1.5);
         }
         else if (input.includes('Enter')) {
@@ -176,15 +185,15 @@ export class Diving extends State {
 
         this.game.particles.unshift(new Fire(this.game, this.game.player.x + this.game.player.width * 0.5, this.game.player.y + this.game.player.height * 0.5))
 
-        if (this.game.player.onGround()) {
-            this.game.player.setState(states.RUNNING, 1.5)
-
-            for (let i = 0; i < 20; i++) {
-                this.game.particles.unshift(new Splash(this.game, this.game.player.x + this.game.player.width * 0.5, this.game.player.y + this.game.player.height * 0.5,))
-            }
-        }
-        else if (input.includes('Enter') && this.game.player.onGround()) {
+        // fixed diving glitch
+        if (input.includes('Enter') && this.game.player.onGround()) {
             this.game.player.setState(states.ROLLING, 1.5)
+            super.createDivingParticles()
+            
+        }
+        else if (this.game.player.onGround()) {
+            this.game.player.setState(states.RUNNING, 1.5)
+            super.createDivingParticles()
         }
 
     }
@@ -213,3 +222,4 @@ export class Hit extends State {
 
     }
 }
+
