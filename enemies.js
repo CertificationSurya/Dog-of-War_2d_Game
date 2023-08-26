@@ -109,7 +109,7 @@ export class ClimbingEnemy extends Enemy {
         super.draw(context)
         context.beginPath() // to draw line
         context.moveTo(this.x + this.width/2, 0) //initial co-ords of line
-        context.lineTo(this.x + this.width/2 , this.y + this.height/2) //Ending co-ords of line
+        context.lineTo(this.x + this.width/2 , this.y + this.height/2 - 20) //Ending co-ords of line
         context.stroke()
     }
 }

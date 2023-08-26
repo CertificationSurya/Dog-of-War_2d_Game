@@ -44,7 +44,7 @@ export class UI{
             // restart Message
             context.fillStyle = "#36454F"
             context.fillText(`Wanna Play Again?`, this.game.width * 0.5, this.game.height * 0.5)
-            context.fillText(`👉 press "r".`, this.game.width * 0.5, this.game.height * 0.5 + 50)
+            context.fillText(`👉 press "r" or "double Tap" On the screen.`, this.game.width * 0.5, this.game.height * 0.5 + 50)
         }
 
         context.restore();

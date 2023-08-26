@@ -17,8 +17,8 @@ class State {
         this.state = state;
         this.game = game;
     }
-    
-    createDivingParticles(){
+
+    createDivingParticles() {
         for (let i = 0; i < 20; i++) {
             this.game.particles.unshift(new Splash(this.game, this.game.player.x + this.game.player.width * 0.5, this.game.player.y + this.game.player.height * 0.5,))
         }
@@ -41,7 +41,10 @@ export class Sitting extends State {
 
     // takes key input and checks if current key is pressed for switching to other state
     handleInput(input) {
-        if (input.includes('ArrowLeft') || input.includes('ArrowRight')) {
+        if (input.includes('ArrowLeft')
+            || input.includes('ArrowRight')
+            || input.includes('swipe left')
+            || input.includes('swipe right')) {
             // fixed choppy state change
             if (input.length > 1) input.length = 1;
 
@@ -71,10 +74,24 @@ export class Running extends State {
     handleInput(input) {
         this.game.particles.unshift(new Dust(this.game, this.game.player.x + this.game.player.width * 0.5, this.game.player.y + this.game.player.height))
 
-        if (input.includes('ArrowDown')) {
-            this.game.player.setState(states.SITTING, 0);
+        if (input.includes('swipe left')){
+            this.game.player.speed -= this.game.player.maxSpeed;
         }
-        else if (input.includes('ArrowUp')) {
+        else if (input.includes('swipe right')){
+            this.game.player.speed += this.game.player.maxSpeed;
+        }
+
+        if (input.includes('ArrowDown')
+        || input.includes('swipe down')
+        ) {
+            if ( !(input.includes('swipe left') || input.includes('swipe right'))){
+                if (input.length > 1) input.length = 1;
+                this.game.player.setState(states.SITTING, 0);
+            }
+        }
+        else if (input.includes('ArrowUp') 
+        || input.includes('swipe up')
+        ) {
             this.game.player.setState(states.JUMPING, 1.5);
         }
 
@@ -108,7 +125,7 @@ export class Jumping extends State {
         else if (input.includes('Enter')) {
             this.game.player.setState(states.ROLLING, 2)
         }
-        else if (input.includes('ArrowDown')) {
+        else if (input.includes('ArrowDown') ) {
             this.game.player.setState(states.DIVING, 0)
         }
     }
@@ -131,7 +148,7 @@ export class Falling extends State {
         if (this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING, 1.5);
         }
-        else if (input.includes('ArrowDown')) {
+        else if (input.includes('ArrowDown') || input.includes('swipe down')) {
             this.game.player.setState(states.DIVING, 0)
         }
     }
@@ -152,18 +169,25 @@ export class Rolling extends State {
 
         this.game.particles.unshift(new Fire(this.game, this.game.player.x + this.game.player.width * 0.5, this.game.player.y + this.game.player.height * 0.5))
 
+        if (input.includes('swipe left') ){
+            this.game.player.speed -= this.game.player.maxSpeed;
+        }
+        else if (input.includes('swipe right')){
+            this.game.player.speed += this.game.player.maxSpeed;
+        }
+
         if (!input.includes('Enter') && this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING, 1.5)
         }
         else if (!input.includes('Enter') && !this.game.player.onGround()) {
             this.game.player.setState(states.FALLING, 1.5)
         }
-        else if (input.includes('Enter') && input.includes('ArrowUp') && this.game.player.onGround()) {
+        else if (input.includes('Enter') && (input.includes('ArrowUp') || input.includes('swipe up')) && this.game.player.onGround()) {
             // this.game.player.setState(states.JUMPING, 1.5)
             this.game.player.vy -= 25
         }
-        else if (input.includes('ArrowDown') && !this.game.player.onGround()) {
-            this.game.player.setState(states.DIVING, 0)
+        else if ((input.includes('ArrowDown') || input.includes('swipe down')) && !this.game.player.onGround() && this.game.player.vy > -5) {
+            this.game.player.setState(states.DIVING, 1.5)
         }
 
     }
@@ -189,7 +213,7 @@ export class Diving extends State {
         if (input.includes('Enter') && this.game.player.onGround()) {
             this.game.player.setState(states.ROLLING, 1.5)
             super.createDivingParticles()
-            
+
         }
         else if (this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING, 1.5)

@@ -12,6 +12,7 @@ window.addEventListener('load', () => {
     canvas.width = 800;
     canvas.height = 500;
 
+    const fullScreenBtn = document.getElementsByTagName('button')[0]
     // main logic
     class Game {
         constructor(width, height) {
@@ -58,6 +59,8 @@ window.addEventListener('load', () => {
             this.time += deltaTime;
             if (this.time > this.maxTime) this.gameOver = true
 
+            // console.log(this.input.keys)
+
             this.background.update(this)
             this.player.update(this.input.keys, deltaTime)
 
@@ -100,8 +103,6 @@ window.addEventListener('load', () => {
             this.particles = this.particles.filter(particle => !particle.markedForDeletion)
             this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion)
             this.floatingMessages = this.floatingMessages.filter(message => !message.markedForDeletion)
-
-
         }
 
         draw(context) {
@@ -143,6 +144,26 @@ window.addEventListener('load', () => {
         }
     }
 
+    // Full screen mode
+    const fullScreen = () =>{
+        // .fullscreenElement gives null if not in full screen.
+        if( !document.fullscreenElement ){
+            canvas.requestFullscreen().catch(err =>{
+                alert("couldn't open full Screen Mode ",err.message)
+            })
+        }
+        else {
+            document.exitFullscreen().catch(err =>{
+                alert("Couldn't exit the full Screen Mode: ",err.message)
+            })
+        }
+    }
+
+    fullScreenBtn.addEventListener('click',(e)=>{
+        fullScreen()
+    })
+
+
     let game = new Game(canvas.width, canvas.height)
     let lastTime = 0
 
@@ -167,6 +188,22 @@ window.addEventListener('load', () => {
                 game = new Game(canvas.width, canvas.height)
                 animate()
             }
+        }
+    })
+
+    // Reloading in mobile
+    let tapCount = 0;
+    window.addEventListener('touchstart', (e) => {
+        if (game.gameOver) {
+            tapCount++;
+            if (tapCount == 2) {
+                game.gameOver = !game.gameOver
+                game = new Game(canvas.width, canvas.height)
+                animate()
+            }
+            const timeout = setTimeout(() => {
+                tapCount = 0;
+            }, 400)
         }
     })
 
