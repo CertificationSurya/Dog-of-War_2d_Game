@@ -208,6 +208,3 @@ window.addEventListener("load", () => {
 		}
 	});
 });
-
-// Ezioc ads function
-
